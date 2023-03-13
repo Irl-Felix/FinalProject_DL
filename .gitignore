@@ -1,0 +1,8 @@
+# created by virtualenv automatically
+bin
+lib
+pyvenv.cfg
+standalone.py
+*.DS_Store
+*db.sqlite3
+securityfile.py
