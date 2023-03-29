@@ -4,5 +4,9 @@ from . import views
 
 
 urlpatterns = [
-    path('predictions/', views.predictionsapi.as_view(), name='predictionsapi'),
+    #Show EVERYTHING(ADMIN VIEW)
+    path('dashboard/', views.dashboard,name='dashboard'),
+    #PREDICTION INPUT
+    path('userprediction/', views.make_predictions,name='userprediction'),
+    path('profileSetting/', views.Profilesettings,name='profile_settings'),
 ]

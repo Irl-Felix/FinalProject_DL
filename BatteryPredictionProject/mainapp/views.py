@@ -1,43 +1,44 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .LSTM import prediction
-
-from . import serializers
-
-from django.shortcuts import render
+from django.shortcuts import redirect
+from .forms import UserPredictionForm
+from .models import UserPrediction,UserProfile
+from .LSTM import prediction as predictionmodel
 
 
+from django.shortcuts import redirect, render
+
+def dashboard(request):
+    #get all prredictions from the DB
+    predictions = UserPrediction.objects.all().order_by('-timestamp')
+
+    #Get all Registeres Users from the DB
+    userprofiles = UserProfile.objects.all()
+
+    total_predictions = predictions.count()
+
+    total_userprofiles = userprofiles.count()
+
+    last_prediction = predictions[0]
+
+    context = {'predictions': predictions,'userprofiles':
+     userprofiles,'total_predictions': total_predictions,
+     'total_userprofiles':total_userprofiles,'last_prediction':last_prediction}
+    return render(request, 'mainapp/dashboard.html',context)
 
 
+def make_predictions(request):
+    form = UserPredictionForm()
+    if request.method == 'POST':
+        form = UserPredictionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
 
-class predictionsapi(APIView):
-    # """Test API View"""
-    predictionserializer = serializers.PredictionAPISerializer
-    #This is just a test GET method
-    def get(self, request, format=None):
-        """ Get predictions """
-        an_apiview = ['Enjoy the API!', 'Try it out!']
+    context = {'form': form}
+    return render(request, 'mainapp/PredictionForm.html', context)
 
-        return Response({'message': 'Hello!', 'an_apiview': an_apiview})
 
-    #TEST
+def userprediction(request):
+    pass
 
-    def post(self, request):
-        """ Create a predictions API(based on data pass from user) """
-        serializer = self.predictionserializer(data=request.data)
-        if serializer.is_valid():
-            capacity = serializer.validated_data.get('capacity')
-            voltage_measured = serializer.validated_data.get('voltage_measured')
-            current_measured = serializer.validated_data.get('current_measured')
-            temperature_measured = serializer.validated_data.get('temperature_measured')
-            current_load = serializer.validated_data.get('current_load')
-            voltage_load = serializer.validated_data.get('voltage_load')
-            time = serializer.validated_data.get('time')
-
-            prediction_result = prediction([[capacity, voltage_measured, current_measured, temperature_measured, current_load, voltage_load, time]])
-            
-            # return the result as the response
-            return Response({'prediction': prediction_result})
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def Profilesettings(request):
+    pass

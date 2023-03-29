@@ -1,0 +1,75 @@
+{%  extends 'mainapp/main.html' %}
+
+{% block content %}
+
+{%  include 'mainapp/status.html' %}
+
+<br>
+
+<div class="row">
+	<div class="col-md-5">
+		<h5>PROFILES:</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="">Create USER</a>
+			<table class="table table-sm">
+				<tr>
+					<th>User</th>
+					<th>Email</th>
+					<th>Car</th>
+					<th>Car Battery</th>
+				</tr>
+
+				{% for userprofile in userprofiles %}
+					<tr>
+						<td>{{userprofile.first_name}}</td>
+						<td>{{userprofile.email}}</td>
+						<td>{{userprofile.car_brand}} {{userprofile.car_model}} {{userprofile.year_of_car}}</td>
+						<td>{{userprofile.battery_of_car}}</td>
+					</tr>
+				{% endfor %}
+				<br>
+
+			</table>
+		</div>
+	</div>
+	
+	<div class="col-md-12">
+		<br>
+		<h5>LAST 5 PREDICTIONS</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'userprediction' %}">Make a prediction</a>
+			<table class="table table-sm">
+				<tr>
+					<th>Capacity</th>
+					<th>Voltage Measured</th>
+					<th>Current Measured</th>
+					<th>Temperature Measured</th>
+					<th>Current Load</th>
+					<th>Voltage Load</th>
+					<th>Time Duration</th>
+					<th>Time</th>
+				</tr>
+				{% for prediction in predictions %}
+					{% if forloop.counter <= 5 %}
+						<tr>
+							<td>{{prediction.capacity}}</td>
+							<td>{{prediction.voltage_measured}}</td>
+							<td>{{prediction.current_measured}}</td>
+							<td>{{prediction.temperature_measured}}</td>
+							<td>{{prediction.current_load}}</td>
+							<td>{{prediction.voltage_load}}</td>
+							<td>{{prediction.time_duration}}</td>
+							<td>{{prediction.timestamp}}</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+								
+			</table>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}
